@@ -1,0 +1,82 @@
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+Cell In[7], line 9
+      5 param_grid={'estimator':['object'],'n_estimators':[10,100,1000]}
+      7 grid = GridSearchCV(AdaBoostRegressor(), param_grid, refit = True, verbose = 3,n_jobs=-1)
+----> 9 grid.fit(independent,dependent)
+
+File ~\anaconda3\Lib\site-packages\sklearn\base.py:1151, in _fit_context.<locals>.decorator.<locals>.wrapper(estimator, *args, **kwargs)
+   1144     estimator._validate_params()
+   1146 with config_context(
+   1147     skip_parameter_validation=(
+   1148         prefer_skip_nested_validation or global_skip_validation
+   1149     )
+   1150 ):
+-> 1151     return fit_method(estimator, *args, **kwargs)
+
+File ~\anaconda3\Lib\site-packages\sklearn\model_selection\_search.py:898, in BaseSearchCV.fit(self, X, y, groups, **fit_params)
+    892     results = self._format_results(
+    893         all_candidate_params, n_splits, all_out, all_more_results
+    894     )
+    896     return results
+--> 898 self._run_search(evaluate_candidates)
+    900 # multimetric is determined here because in the case of a callable
+    901 # self.scoring the return type is only known after calling
+    902 first_test_score = all_out[0]["test_scores"]
+
+File ~\anaconda3\Lib\site-packages\sklearn\model_selection\_search.py:1419, in GridSearchCV._run_search(self, evaluate_candidates)
+   1417 def _run_search(self, evaluate_candidates):
+   1418     """Search all candidates in param_grid"""
+-> 1419     evaluate_candidates(ParameterGrid(self.param_grid))
+
+File ~\anaconda3\Lib\site-packages\sklearn\model_selection\_search.py:875, in BaseSearchCV.fit.<locals>.evaluate_candidates(candidate_params, cv, more_results)
+    868 elif len(out) != n_candidates * n_splits:
+    869     raise ValueError(
+    870         "cv.split and cv.get_n_splits returned "
+    871         "inconsistent results. Expected {} "
+    872         "splits, got {}".format(n_splits, len(out) // n_candidates)
+    873     )
+--> 875 _warn_or_raise_about_fit_failures(out, self.error_score)
+    877 # For callable self.scoring, the return type is only know after
+    878 # calling. If the return type is a dictionary, the error scores
+    879 # can now be inserted with the correct key. The type checking
+    880 # of out will be done in `_insert_error_scores`.
+    881 if callable(self.scoring):
+
+File ~\anaconda3\Lib\site-packages\sklearn\model_selection\_validation.py:414, in _warn_or_raise_about_fit_failures(results, error_score)
+    407 if num_failed_fits == num_fits:
+    408     all_fits_failed_message = (
+    409         f"\nAll the {num_fits} fits failed.\n"
+    410         "It is very likely that your model is misconfigured.\n"
+    411         "You can try to debug the error by setting error_score='raise'.\n\n"
+    412         f"Below are more details about the failures:\n{fit_errors_summary}"
+    413     )
+--> 414     raise ValueError(all_fits_failed_message)
+    416 else:
+    417     some_fits_failed_message = (
+    418         f"\n{num_failed_fits} fits failed out of a total of {num_fits}.\n"
+    419         "The score on these train-test partitions for these parameters"
+   (...)
+    423         f"Below are more details about the failures:\n{fit_errors_summary}"
+    424     )
+
+ValueError: 
+All the 15 fits failed.
+It is very likely that your model is misconfigured.
+You can try to debug the error by setting error_score='raise'.
+
+Below are more details about the failures:
+--------------------------------------------------------------------------------
+15 fits failed with the following error:
+Traceback (most recent call last):
+  File "C:\Users\lakshmipriya\anaconda3\Lib\site-packages\sklearn\model_selection\_validation.py", line 732, in _fit_and_score
+    estimator.fit(X_train, y_train, **fit_params)
+  File "C:\Users\lakshmipriya\anaconda3\Lib\site-packages\sklearn\base.py", line 1144, in wrapper
+    estimator._validate_params()
+  File "C:\Users\lakshmipriya\anaconda3\Lib\site-packages\sklearn\base.py", line 637, in _validate_params
+    validate_parameter_constraints(
+  File "C:\Users\lakshmipriya\anaconda3\Lib\site-packages\sklearn\utils\_param_validation.py", line 95, in validate_parameter_constraints
+    raise InvalidParameterError(
+sklearn.utils._param_validation.InvalidParameterError: The 'estimator' parameter of AdaBoostRegressor must be an object implementing 'fit' and 'predict' or None. Got 'object' instead.
+
